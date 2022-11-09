@@ -1,6 +1,6 @@
 'use strict'
-
-const {db, models: {User} } = require('../server/db')
+const { faker } = require('@faker-js/faker');
+const {db, models: {User, Product, Order, OrderItem} } = require('../server/db')
 
 /**
  * seed - this function clears the database, updates tables to
@@ -10,27 +10,42 @@ async function seed() {
   await db.sync({ force: true }) // clears db and matches models to tables
   console.log('db synced!')
 
-  // Creating Users
-  const users = await Promise.all([
-    User.create({ username: 'cody', password: '123' }),
-    User.create({ username: 'murphy', password: '123' }),
-  ])
-
-  console.log(`seeded ${users.length} users`)
-  console.log(`seeded successfully`)
-  return {
-    users: {
-      cody: users[0],
-      murphy: users[1]
+  const users = [...Array(10)].map((user) => {
+    return {
+      username: faker.internet.userName(),
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      password: faker.internet.password(8),
+      email: faker.internet.email(),
     }
-  }
+})
+
+    const dbUsers = await Promise.all(
+      users.map((user) => {
+        return User.create(user)
+      }))
+
+    const products = [...Array(10)].map((product) => {
+      return {
+        name: faker.commerce.product(),
+        price: faker.commerce.price(),
+        description: faker.commerce.productDescription(),
+        imageUrl: faker.image.business(),
+      }
+    })
+
+    const dbProducts = await Promise.all(
+      products.map((product) => {
+        return Product.create(product)
+      }))
 }
+
 
 /*
  We've separated the `seed` function from the `runSeed` function.
  This way we can isolate the error handling and exit trapping.
  The `seed` function is concerned only with modifying the database.
-*/
+ */
 async function runSeed() {
   console.log('seeding...')
   try {
