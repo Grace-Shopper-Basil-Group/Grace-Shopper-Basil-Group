@@ -4,13 +4,15 @@ const db = require('../db');
 const OrderItem = db.define('orderItem', {
   quantity: {
     type: Sequelize.INTEGER,
-    validate: {
-      require: true,
-    },
+    required: true,
+    allowNull: true,
+    // validate: {
+    //   required: true,
+    // },
   },
   price: {
     type: Sequelize.FLOAT,
-    allowNull: false,
+    // allowNull: false,
   },
 });
 
