@@ -11,5 +11,14 @@ router.get("/", async (req, res, next) => {
     res.send(products);
   } catch (err) {
     next(err);
-  }
+      }
+});
+
+//GET /api/products/:id
+router.get('/:id', async (req, res, next) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+    res.send(product);
+  } catch (e) {
+    next(e);}
 });
