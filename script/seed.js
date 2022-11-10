@@ -13,6 +13,27 @@ async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
   console.log("db synced!");
 
+  const accessUser = {
+    username: 'testAccount',
+    firstName: 'John',
+    lastName: 'Doe',
+    password: 'password',
+    email: 'johndoe@test.com'
+  }
+  const dbAccessUser = await User.create(accessUser)
+
+  const accessOrder = {
+    complete: false,
+    date: faker.date.past(),
+    shippingInfo: faker.address.buildingNumber(),
+    billingInfo: "placeholder",
+  }
+
+  const dbAccessOrder = await Order.create(accessOrder)
+  await dbAccessOrder.setUser(dbAccessUser)
+
+
+
   const users = [...Array(10)].map((user) => {
     return {
       username: faker.internet.userName(),
@@ -79,6 +100,22 @@ async function seed() {
       return OrderItem.create(orderItem);
     })
   );
+
+  const orderItem1 = {
+    quantity: 2,
+    price: faker.commerce.price(),
+    orderId: 1,
+    productId: 1,
+    }
+
+  const orderItem2 = {
+    quantity: 2,
+    price: faker.commerce.price(),
+    orderId: 1,
+    productId: 2,
+  }
+  await OrderItem.create(orderItem1)
+  await OrderItem.create(orderItem2)
 }
 
 /*

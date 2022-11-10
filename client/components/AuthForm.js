@@ -55,14 +55,15 @@ const mapSignup = state => {
   }
 }
 
+
 const mapDispatch = dispatch => {
   return {
-    handleSubmit(evt) {
+    async handleSubmit(evt) {
       evt.preventDefault()
       const formName = evt.target.name
       const username = evt.target.username.value
       const password = evt.target.password.value
-      dispatch(authenticate(username, password, formName))
+      await dispatch(authenticate(username, password, formName))
     }
   }
 }
