@@ -11,7 +11,27 @@ const {
  */
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
-  console.log('db synced!');
+
+  console.log("db synced!");
+
+  const accessUser = {
+    username: 'testAccount',
+    firstName: 'John',
+    lastName: 'Doe',
+    password: 'password',
+    email: 'johndoe@test.com'
+  }
+  const dbAccessUser = await User.create(accessUser)
+
+  const accessOrder = {
+    complete: false,
+    date: faker.date.past(),
+    shippingInfo: faker.address.buildingNumber(),
+    billingInfo: "placeholder",
+  }
+
+  const dbAccessOrder = await Order.create(accessOrder)
+  await dbAccessOrder.setUser(dbAccessUser)
 
   const users = [...Array(10)].map((user) => {
     return {
@@ -38,11 +58,64 @@ async function seed() {
     };
   });
 
+  const orders = [...Array(10)].map((order) => {
+    return {
+      complete: false,
+      date: faker.date.past(),
+      shippingInfo: faker.address.buildingNumber(),
+      billingInfo: "placeholder",
+    };
+  });
+
+  let dbOrders = await Promise.all(
+    orders.map((order) => {
+      return Order.create(order);
+    })
+  );
+
   const dbProducts = await Promise.all(
     products.map((product) => {
       return Product.create(product);
     })
   );
+
+  await Promise.all(
+    dbOrders.map((order) => {
+      return order.setUser(dbUsers[order.id - 1]);
+    })
+  );
+
+  const orderItems = [...Array(10)].map((order) => {
+    return {
+      quantity: 2,
+      price: faker.commerce.price(),
+      orderId: Math.floor(Math.random() * 10) + 1,
+      productId: Math.floor(Math.random() * 10) + 1,
+    };
+  });
+
+  const dbOrderItems = await Promise.all(
+    orderItems.map((orderItem) => {
+      return OrderItem.create(orderItem);
+    })
+  );
+
+  const orderItem1 = {
+    quantity: 2,
+    price: faker.commerce.price(),
+    orderId: 1,
+    productId: 1,
+    }
+
+  const orderItem2 = {
+    quantity: 2,
+    price: faker.commerce.price(),
+    orderId: 1,
+    productId: 2,
+  }
+  await OrderItem.create(orderItem1)
+  await OrderItem.create(orderItem2)
+
 }
 
 /*
@@ -51,7 +124,10 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
  */
 async function runSeed() {
+
+
   console.log('seeding...');
+
   try {
     await seed();
   } catch (err) {

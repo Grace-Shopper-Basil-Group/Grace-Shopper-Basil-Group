@@ -1,20 +1,37 @@
-import React from 'react';
-import { connect } from 'react-redux';
+
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchCart } from "../store/cart";
 import AllProducts from './AllProducts';
 
 /**
  * COMPONENT
  */
-export const Home = (props) => {
-  const { username } = props;
+// add username to render
+export class Home extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cart: {},
+    };
+  }
+// const { username } = props;
+  componentDidMount() {
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      this.props.getCart(token);
+    }
+  }
 
-  return (
-    <div>
-      <h3>Welcome, {username}</h3>
-      <AllProducts />
-    </div>
-  );
-};
+  render() {
+    return (
+      <div>
+        <h3>Welcome</h3>
+              <AllProducts />
+      </div>
+    );
+  }
+}
 
 /**
  * CONTAINER
@@ -22,7 +39,16 @@ export const Home = (props) => {
 const mapState = (state) => {
   return {
     username: state.auth.username,
+    cart: state.cart,
   };
 };
 
-export default connect(mapState)(Home);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCart: (token) => {
+      dispatch(fetchCart({ headers: { authorization: token } }));
+    },
+  };
+};
+
+export default connect(mapState, mapDispatchToProps)(Home);

@@ -10,7 +10,6 @@ export const getSingleProduct = (product) => {
 };
 
 export const fetchProduct = (id) => {
-  console.log('FetchProduct')
   return async (dispatch) => {
     try {
       const response = await axios.get(`/api/products/${id}`);
