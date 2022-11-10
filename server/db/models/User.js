@@ -35,6 +35,7 @@ const User = db.define('user', {
   accessRights: {
     type: Sequelize.ENUM,
     values: ['standard', 'admin'],
+    defaultValue: 'standard',
   },
 });
 
