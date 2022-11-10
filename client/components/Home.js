@@ -1,50 +1,50 @@
-import React, { Component } from 'react'
-import {connect} from 'react-redux'
-import { fetchCart } from '../store/cart'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchCart } from "../store/cart";
 
 /**
  * COMPONENT
  */
-export class Home extends Component{
-  constructor(props){
-    super(props)
+export class Home extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
-      cart: {}
-    }
+      cart: {},
+    };
   }
 
   componentDidMount() {
-    const token = window.localStorage.getItem('token');
+    const token = window.localStorage.getItem("token");
     if (token) {
-      this.props.getCart(token)
+      this.props.getCart(token);
     }
   }
 
   render() {
-    return(
+    return (
       <div>
         <h3>Welcome</h3>
       </div>
-    )
+    );
   }
 }
 
 /**
  * CONTAINER
  */
-const mapState = state => {
+const mapState = (state) => {
   return {
     username: state.auth.username,
     cart: state.cart,
-  }
-}
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-      getCart: (token) => {
-        dispatch(fetchCart({ headers: { authorization: token }}))
-      }
-    }
-}
+  return {
+    getCart: (token) => {
+      dispatch(fetchCart({ headers: { authorization: token } }));
+    },
+  };
+};
 
-export default connect(mapState, mapDispatchToProps)(Home)
+export default connect(mapState, mapDispatchToProps)(Home);
