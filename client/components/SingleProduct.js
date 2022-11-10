@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import fetchProduct from '../store/product';
+import { fetchProduct } from '../store/product.js';
 
-class SingleProduct extends Component {
+export class SingleProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,34 +12,33 @@ class SingleProduct extends Component {
 
   componentDidMount() {
     const productId = this.props.match.params.id;
-    console.log('this.props :>> ', this.props);
     this.props.loadProduct(productId);
   }
 
   render() {
-    const { product } = this.props || {};
-
-    console.log('this.props :>> ', this.props);
     return (
       <div>
-        {product.name}
-        {product.price / 100}
-        {product.description}
-        <img src={product.imageUrl} />
+        <h1>{this.props.product.name}</h1>
+        <h2>{this.props.product.price}</h2>
+        <h3>{this.props.product.description}</h3>
+        <img src={this.props.product.imageUrl} />
       </div>
-    );
+    )
   }
 }
-const mapState = (state) => {
+
+const mapStateToProps = (state) => {
   return {
     product: state.product,
   };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    loadProduct: (id) => dispatch(fetchProduct(id)),
+    loadProduct: (id) => {
+      dispatch(fetchProduct(id))
+    },
   };
 };
 
-export default connect(mapState, mapDispatch)(SingleProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(SingleProduct);
