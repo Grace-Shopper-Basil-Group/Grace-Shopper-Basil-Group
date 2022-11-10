@@ -1,10 +1,13 @@
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchCart } from "../store/cart";
+import AllProducts from './AllProducts';
 
 /**
  * COMPONENT
  */
+// add username to render
 export class Home extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +15,7 @@ export class Home extends Component {
       cart: {},
     };
   }
-
+// const { username } = props;
   componentDidMount() {
     const token = window.localStorage.getItem("token");
     if (token) {
@@ -24,6 +27,7 @@ export class Home extends Component {
     return (
       <div>
         <h3>Welcome</h3>
+              <AllProducts />
       </div>
     );
   }

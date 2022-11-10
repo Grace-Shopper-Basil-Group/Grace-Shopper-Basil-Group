@@ -1,9 +1,9 @@
-"use strict";
-const { faker } = require("@faker-js/faker");
+'use strict';
+const { faker } = require('@faker-js/faker');
 const {
   db,
   models: { User, Product, Order, OrderItem },
-} = require("../server/db");
+} = require('../server/db');
 
 /**
  * seed - this function clears the database, updates tables to
@@ -11,6 +11,7 @@ const {
  */
 async function seed() {
   await db.sync({ force: true }); // clears db and matches models to tables
+
   console.log("db synced!");
 
   const accessUser = {
@@ -32,8 +33,6 @@ async function seed() {
   const dbAccessOrder = await Order.create(accessOrder)
   await dbAccessOrder.setUser(dbAccessUser)
 
-
-
   const users = [...Array(10)].map((user) => {
     return {
       username: faker.internet.userName(),
@@ -53,9 +52,9 @@ async function seed() {
   const products = [...Array(10)].map((product) => {
     return {
       name: faker.commerce.product(),
-      price: faker.commerce.price(),
+      price: faker.commerce.price(null, null, 0),
       description: faker.commerce.productDescription(),
-      imageUrl: faker.image.business(),
+      imageUrl: faker.image.business(200, 200),
     };
   });
 
@@ -116,6 +115,7 @@ async function seed() {
   }
   await OrderItem.create(orderItem1)
   await OrderItem.create(orderItem2)
+
 }
 
 /*
@@ -124,16 +124,19 @@ async function seed() {
  The `seed` function is concerned only with modifying the database.
  */
 async function runSeed() {
-  console.log("seeding...");
+
+
+  console.log('seeding...');
+
   try {
     await seed();
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
   } finally {
-    console.log("closing db connection");
+    console.log('closing db connection');
     await db.close();
-    console.log("db connection closed");
+    console.log('db connection closed');
   }
 }
 
