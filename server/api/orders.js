@@ -15,15 +15,14 @@ const requireToken = async (req, res, next) => {
   }
 };
 
-router.get('/cart', async (req, res, next) => {
-  console.log('Cart route')
+router.get('/cart', requireToken, async (req, res, next) => {
   try {
     const cart = await Order.findOne({
       where: {
         complete: false,
         userId: req.user.id,
       },
-      include: { OrderItem, Product }
+      include: { model: Product, OrderItem }
     })
     res.send(cart)
   } catch(error) {
