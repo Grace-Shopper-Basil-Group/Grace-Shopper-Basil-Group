@@ -4,9 +4,19 @@ const { models: { Order, User, OrderItem, Product }} = require('../db');
 module.exports = router
 
 const requireToken = async (req, res, next) => {
-  console.log("requireToken")
   try {
     const token = req.headers.authorization;
+    const user = await User.findByToken(token);
+    req.user = user;
+    next();
+  } catch(error) {
+    next(error);
+  }
+};
+
+const requireTokenForPosts = async (req, res, next) => {
+  try {
+    const token = req.body.headers.authorization;
     const user = await User.findByToken(token);
     req.user = user;
     next();
@@ -22,9 +32,32 @@ router.get('/cart', requireToken, async (req, res, next) => {
         complete: false,
         userId: req.user.id,
       },
-      include: { model: Product, OrderItem }
+      include: [{
+        model: OrderItem,
+        model: Product }]
     })
     res.send(cart)
+  } catch(error) {
+    next(error)
+  }
+})
+
+router.post('/cart', requireTokenForPosts, async (req, res, next) => {
+  try {
+    const [orderItem, created] = await OrderItem.findOrCreate({
+      where: {
+        orderId: req.body.cartId,
+        productId: req.body.item.id,
+      },
+    })
+    orderItem.price = req.body.item.price;
+    if (!created) {
+      orderItem.quantity += 1;
+    } else {
+      orderItem.quantity = 1;
+    }
+    await orderItem.save()
+    res.send(orderItem)
   } catch(error) {
     next(error)
   }
