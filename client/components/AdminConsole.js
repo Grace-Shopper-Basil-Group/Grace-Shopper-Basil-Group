@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchProducts } from '../store/allProducts';
 
-export class AllProducts extends Component {
+export class AdminConsole extends Component {
   componentDidMount() {
     this.props.getProducts();
   }
@@ -12,7 +12,7 @@ export class AllProducts extends Component {
 
     return (
       <div>
-        <h2>Products</h2>
+        {/* <h2>Products</h2>
         <ul>
           {allProducts.map((product) => (
             <div key={product.id}>
@@ -20,10 +20,13 @@ export class AllProducts extends Component {
               <br></br>
               {product.name}
               <br></br>
+
               {product.description}
             </div>
           ))}
-        </ul>
+        </ul> */}
+
+        <div> WELCOME ADMIN, HERE YOU ARE GOD</div>
       </div>
     );
   }
@@ -42,4 +45,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AllProducts);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminConsole);
