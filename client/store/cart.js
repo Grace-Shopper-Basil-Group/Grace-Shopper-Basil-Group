@@ -1,6 +1,6 @@
-import axios from "axios";
+import axios from 'axios';
 
-const GET_CART = "GET_CART";
+const GET_CART = 'GET_CART';
 
 export const getCart = (cart) => {
   return {
@@ -12,8 +12,8 @@ export const getCart = (cart) => {
 export const fetchCart = (reqBody) => {
   return async (dispatch) => {
     try {
-      console.log(reqBody);
-      const response = await axios.get("/api/orders/cart", reqBody);
+      //console.log(reqBody);
+      const response = await axios.get('/api/orders/cart', reqBody);
       const cart = response.data;
       dispatch(getCart(cart));
     } catch (e) {
