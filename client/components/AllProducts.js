@@ -30,7 +30,6 @@ export class AllProducts extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log("state", state);
   return {
     allProducts: state.allProducts,
   };

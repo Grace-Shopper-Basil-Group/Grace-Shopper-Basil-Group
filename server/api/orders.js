@@ -62,3 +62,18 @@ router.post('/cart', requireTokenForPosts, async (req, res, next) => {
     next(error)
   }
 })
+
+router.delete('/cart', requireToken, async (req, res, next) => {
+  try {
+    const deletedItem = await OrderItem.findOne({
+      where: {
+        orderId: req.body.cartId,
+        productId: req.body.itemId,
+      }
+    })
+    await deletedItem.destroy()
+    res.sendStatus(200)
+  } catch(error) {
+    next(error)
+  }
+})
