@@ -1,8 +1,10 @@
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchProducts } from "../store/allProducts";
 import SingleProduct from "./SingleProduct";
 import { Link } from "react-router-dom"
+
 
 export class AllProducts extends Component {
   componentDidMount() {
@@ -10,20 +12,32 @@ export class AllProducts extends Component {
   }
   render() {
     const allProducts = this.props.allProducts;
+
     return (
       <div>
         <h2>Products</h2>
-        <ul>
+        <div className="div_products_list">
           {allProducts.map((product) => (
-            <div key={product.id}>
+            <div className="product_card" key={product.id}>
               <img src={product.imageUrl} alt="product image" />
-              <br></br>
-              <Link to={`/products/${product.id}`}>{product.name}</Link>
-              <br></br>
-              {product.description}
+              <h1>{product.name}</h1>
+              <p className="price">Price:${product.price}</p>
+              <p className="description">
+                Description: {product.description.slice(0, 30)}...
+              </p>
+              <p>
+                <button className="card_btns">
+                  <span>See Product Details</span>
+                </button>
+              </p>
+              <p>
+                <button className="card_btns">
+                  <span>Add to Cart</span>
+                </button>
+              </p>
             </div>
           ))}
-        </ul>
+        </div>
       </div>
     );
   }
@@ -32,6 +46,7 @@ export class AllProducts extends Component {
 const mapStateToProps = (state) => {
   return {
     allProducts: state.allProducts,
+    access: state.auth.accessRights,
   };
 };
 

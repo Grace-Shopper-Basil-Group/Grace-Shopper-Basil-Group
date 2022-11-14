@@ -7,6 +7,7 @@ import SingleProduct from './components/SingleProduct';
 import ViewCart from './components/ViewCart';
 import Home from './components/Home';
 import { me } from './store';
+import AdminConsole from './components/AdminConsole';
 
 /**
  * COMPONENT
@@ -24,9 +25,20 @@ class Routes extends Component {
         {isLoggedIn ? (
           <Switch>
             <Route path="/home" component={Home} />
+
             <Route path="/cart" component={ViewCart} />
             <Route path="/products/:id" exact component={SingleProduct} />
-            <Redirect to="/home" />
+         
+
+
+            {this.props.auth === 'admin' ? (
+              <Switch>
+                <Route exact path="/admin" component={AdminConsole} />
+                <Redirect to="/admin" />
+              </Switch>
+            ) : (
+              <Redirect to="/home" />
+            )}
           </Switch>
         ) : (
           <Switch>
@@ -50,6 +62,7 @@ const mapState = (state) => {
     // Being 'logged in' for our purposes will be defined has having a state.auth that has a truthy id.
     // Otherwise, state.auth will be an empty object, and state.auth.id will be falsey
     isLoggedIn: !!state.auth.id,
+    auth: state.auth.accessRights,
   };
 };
 
