@@ -8,8 +8,8 @@ export class AdminConsole extends Component {
     super();
 
     this.state = {
+      showEditForm: null,
       showAddForm: false,
-      showEditForm: false,
     };
 
     this.handleAdd = this.handleAdd.bind(this);
@@ -20,8 +20,7 @@ export class AdminConsole extends Component {
   }
   handleEdit(evt) {
     evt.preventDefault();
-    let newBool = !this.state.showEditForm;
-    this.setState({ showEditForm: newBool });
+    this.setState({ showEditForm: evt.target.id})
   }
   handleAdd(evt) {
     evt.preventDefault();
@@ -55,9 +54,9 @@ export class AdminConsole extends Component {
               <button id={product.id} onClick={this.handleEdit}>
                 Edit
               </button>
-              {this.state.showEditForm && (
+              {(this.state.showEditForm == product.id) ? (
                 <AddProduct id={product.id} mode="edit" />
-              )}
+              ):(null)}
               <button onClick={() => this.props.deleteProduct(product.id)}>
                 Delete
               </button>

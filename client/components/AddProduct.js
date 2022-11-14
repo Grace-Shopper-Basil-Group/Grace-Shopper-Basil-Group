@@ -64,7 +64,7 @@ export class AddProduct extends Component {
         />
 
         <button type="submit">Submit</button>
-        <Link to="/">Cancel</Link>
+        <Link to="/admin">Cancel</Link>
       </form>
     );
   }
