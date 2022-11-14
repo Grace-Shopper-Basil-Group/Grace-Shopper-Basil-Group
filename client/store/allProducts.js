@@ -1,9 +1,11 @@
-import axios from "axios";
+import axios from 'axios';
+import history from '../history';
 
 //action types
-const SET_PRODUCTS = "SET_PRODUCTS";
-// const CREATE_products = "CREATE_products";
-// const DELETE_products = "DELETE_products";
+const SET_PRODUCTS = 'SET_PRODUCTS';
+const CREATE_PRODUCT = 'CREATE_PRODUCT';
+const DELETE_PRODUCT = 'DELETE_PRODUCT';
+const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 
 let initialState = [];
 
@@ -14,38 +16,61 @@ export const setProducts = (products) => {
     products,
   };
 };
-// export const _createproducts = (products) => {
-//   return {
-//     type: CREATE_products,
-//     products,
-//   };
-// };
+export const _createProduct = (product) => {
+  return {
+    type: CREATE_PRODUCT,
+    product,
+  };
+};
 
-// export const _deleteproducts = (products) => {
-//   return {
-//     type: DELETE_products,
-//     products,
-//   };
-// };
+export const _updateProduct = (product) => {
+  return {
+    type: UPDATE_PRODUCT,
+    product,
+  };
+};
+
+export const _deleteProduct = (product) => {
+  return {
+    type: DELETE_PRODUCT,
+    product,
+  };
+};
 //thunk creators
-// export const createproducts = (products, history) => {
-//   return async (dispatch) => {
-//     const { data: created } = await axios.post("/api/products", products);
-//     dispatch(_createproducts(created));
-//     history.push("/products");
-//   };
-// };
-// export const deleteproducts = (id, history) => {
-//   return async (dispatch) => {
-//     const { data: products } = await axios.delete(`/api/products/${id}`);
-//     dispatch(_deleteproducts(products));
-//     history.push("/products");
-//   };
-// };
+export const createProduct = (product) => {
+  return async (dispatch) => {
+    const data = await axios.post('/api/products', product);
+    dispatch(_createProduct(data.data));
+    history.push('/home');
+  };
+};
+
+export const updateProduct = (product) => {
+  return async (dispatch) => {
+    try {
+      const { data: updated } = await axios.put(
+        `/api/products/${product.id}`,
+        product
+      );
+      dispatch(_updateProduct(updated));
+      history.push('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+export const deleteProduct = (id) => {
+  return async (dispatch) => {
+    const { data: product } = await axios.delete(`/api/products/${id}`);
+    dispatch(_deleteProduct(product));
+    history.push('/');
+  };
+};
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    const response = await axios.get("/api/products");
+    const response = await axios.get('/api/products');
 
     const products = response.data;
     const action = setProducts(products);
@@ -59,10 +84,14 @@ export default function productsReducer(state = initialState, action) {
   switch (action.type) {
     case SET_PRODUCTS:
       return [...action.products];
-    // case CREATE_products:
-    //   return [...state, ...action.products];
-    // case DELETE_products:
-    //   return state.filter((products) => products.id !== action.products.id);
+    case CREATE_PRODUCT:
+      return [...state, action.product];
+    case UPDATE_PRODUCT:
+      return state.map((product) =>
+        product.id === action.product.id ? action.product : product
+      );
+    case DELETE_PRODUCT:
+      return state.filter((products) => products.id !== action.product.id);
     default:
       return state;
   }
