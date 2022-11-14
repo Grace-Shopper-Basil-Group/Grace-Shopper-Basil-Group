@@ -1,6 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { fetchProducts } from '../store/allProducts';
+
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { fetchProducts } from "../store/allProducts";
+import SingleProduct from "./SingleProduct";
+import { Link } from "react-router-dom"
+
 
 export class AllProducts extends Component {
   componentDidMount() {
@@ -8,7 +12,6 @@ export class AllProducts extends Component {
   }
   render() {
     const allProducts = this.props.allProducts;
-    const access = this.props.access;
 
     return (
       <div>
