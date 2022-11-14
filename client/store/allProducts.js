@@ -41,7 +41,7 @@ export const createProduct = (product) => {
   return async (dispatch) => {
     const data = await axios.post('/api/products', product);
     dispatch(_createProduct(data.data));
-    history.push('/home');
+    history.push('/admin');
   };
 };
 
@@ -53,7 +53,7 @@ export const updateProduct = (product) => {
         product
       );
       dispatch(_updateProduct(updated));
-      history.push('/');
+      history.push('/admin');
     } catch (e) {
       console.log(e);
     }
@@ -64,7 +64,7 @@ export const deleteProduct = (id) => {
   return async (dispatch) => {
     const { data: product } = await axios.delete(`/api/products/${id}`);
     dispatch(_deleteProduct(product));
-    history.push('/');
+    history.push('/admin');
   };
 };
 

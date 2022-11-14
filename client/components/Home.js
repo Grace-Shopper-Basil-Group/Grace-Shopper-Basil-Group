@@ -26,7 +26,7 @@ export class Home extends Component {
   render() {
     return (
       <div>
-        <h3>Welcome</h3>
+        <h3>Welcome {this.props.username}</h3>
               <AllProducts />
       </div>
     );
