@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import history from '../history';
 
 const GET_CART = "GET_CART";
 const ADD_ITEM = "ADD_ITEM";
@@ -34,6 +34,7 @@ export const addItemToCart = (token, item, cartId) => {
       const addedItem = response.data
       item.orderItem = addedItem;
       dispatch(addItem(item));
+      history.push('/cart');
     } catch (e) {
       console.error(e)
     }
