@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchProduct } from '../store/product.js';
 import { addItemToCart } from '../store/cart.js';
+import history from '../history'
 
 export class SingleProduct extends Component {
   constructor(props) {
@@ -23,6 +24,22 @@ export class SingleProduct extends Component {
     if (token) {
       const cartId = this.props.cart.id
       this.props.addToCart(token, this.props.product, cartId)
+    } else {
+      let cart = JSON.parse(window.localStorage.getItem('cart'));
+      let inCart = false;
+      let productToAdd = this.props.product
+      cart.products.forEach((productInStorage) => {
+        if (productToAdd.id === productInStorage.id) {
+          productInStorage.quantity++;
+          inCart = true;
+        }
+      })
+      if (!inCart) {
+        productToAdd.quantity = 1;
+        cart.products.push(productToAdd)
+      }
+      window.localStorage.setItem('cart', JSON.stringify(cart))
+      history.push('/cart')
     }
   }
 

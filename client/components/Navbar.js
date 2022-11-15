@@ -7,14 +7,19 @@ import { fetchCart } from "../store/cart";
 class Navbar extends React.Component {
   constructor(props){
     super(props)
-    console.log(this.props)
-
   }
 
   componentDidMount() {
     const token = window.localStorage.getItem("token");
     if (token) {
       this.props.getCart(token);
+    } else {
+      if (!window.localStorage.getItem('cart')) {
+      let cart = JSON.stringify({
+        products: []
+      })
+      window.localStorage.setItem('cart', cart)
+    }
     }
   }
 
@@ -41,6 +46,7 @@ class Navbar extends React.Component {
               {/* The navbar will show these links before you log in */}
               <Link to="/login">Login</Link>
               <Link to="/signup">Sign Up</Link>
+              <Link to="/cart">Cart</Link>
               <Link to="/">Home</Link>
             </div>
           )}

@@ -5,6 +5,7 @@ import { fetchProducts } from "../store/allProducts";
 import { addItemToCart } from '../store/cart.js';
 import SingleProduct from "./SingleProduct";
 import { Link } from "react-router-dom"
+import history from "../history"
 
 
 export class AllProducts extends Component {
@@ -21,6 +22,21 @@ export class AllProducts extends Component {
     if (token) {
       const cartId = this.props.cart.id
       this.props.addToCart(token, product, cartId)
+    } else {
+      let cart = JSON.parse(window.localStorage.getItem('cart'));
+      let inCart = false;
+      cart.products.forEach((productInStorage) => {
+        if (product.id === productInStorage.id) {
+          productInStorage.quantity++;
+          inCart = true;
+        }
+      })
+      if (!inCart) {
+        product.quantity = 1;
+        cart.products.push(product)
+      }
+      window.localStorage.setItem('cart', JSON.stringify(cart))
+      history.push('/cart')
     }
   }
 

@@ -8,6 +8,7 @@ import ViewCart from './components/ViewCart';
 import Home from './components/Home';
 import { me } from './store';
 import AdminConsole from './components/AdminConsole';
+import Guestcart from './components/Guestcart';
 
 /**
  * COMPONENT
@@ -34,6 +35,7 @@ class Routes extends Component {
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route path="/cart" component={Guestcart} />
           </Switch>
         )}
         {this.props.auth === 'admin' ? (
