@@ -2,14 +2,28 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchProducts } from "../store/allProducts";
+import { addItemToCart } from '../store/cart.js';
 import SingleProduct from "./SingleProduct";
 import { Link } from "react-router-dom"
 
 
 export class AllProducts extends Component {
+  constructor() {
+    super()
+    this.handleClick = this.handleClick.bind(this)
+  }
   componentDidMount() {
     this.props.getProducts();
   }
+
+  handleClick(event, product){
+    const token = window.localStorage.getItem("token");
+    if (token) {
+      const cartId = this.props.cart.id
+      this.props.addToCart(token, product, cartId)
+    }
+  }
+
   render() {
     const allProducts = this.props.allProducts;
 
@@ -27,12 +41,12 @@ export class AllProducts extends Component {
               </p>
               <p>
                 <button className="card_btns">
-                  <span>See Product Details</span>
+                  <Link to={`/products/${product.id}`}>See Product Details</Link>
                 </button>
               </p>
               <p>
-                <button className="card_btns">
-                  <span>Add to Cart</span>
+                <button id={product.id} className="card_btns" onClick={(event) => this.handleClick(event, product)} type="click">
+                  Add to Cart
                 </button>
               </p>
             </div>
@@ -47,12 +61,16 @@ const mapStateToProps = (state) => {
   return {
     allProducts: state.allProducts,
     access: state.auth.accessRights,
+    cart: state.cart,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getProducts: () => dispatch(fetchProducts()),
+    addToCart: (token, item, cartId) => {
+      dispatch(addItemToCart(token, item, cartId))
+    }
   };
 };
 
