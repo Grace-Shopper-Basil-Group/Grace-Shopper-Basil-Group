@@ -21,7 +21,8 @@ export class ViewCart extends Component {
     return (
       <div>
         <h1>Current Cart</h1>
-        {this.props.products.map((item) => {
+        {(this.props.products) ? (
+        this.props.products.map((item) => {
           return(
             <div key={item.id}>
               <Link to={`products/${item.id}`}>{item.name}</Link>
@@ -32,7 +33,7 @@ export class ViewCart extends Component {
               <button onClick={() =>{this.handleRemove(item.id)}}>Remove from cart</button>
             </div>
           )
-        })}
+        })):(<div>No items in cart</div>)}
       </div>
     )
   }

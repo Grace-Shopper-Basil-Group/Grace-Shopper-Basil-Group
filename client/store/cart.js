@@ -94,9 +94,7 @@ export default function cartReducer(cart = {}, action) {
           return productsArray
         }
       }, productsArray);
-      let newRemoveCart = cart;
-      newRemoveCart.products = newRemoveProducts;
-      return newRemoveCart
+      return {...cart, products: productsArray}
     default:
       return cart;
   }
