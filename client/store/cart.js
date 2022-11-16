@@ -1,4 +1,6 @@
 import axios from 'axios';
+import history from '../history';
+
 
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
@@ -33,6 +35,8 @@ export const checkoutCart = (cart) => {
   };
 };
 
+
+
 export const addItemToCart = (token, item, cartId) => {
   return async (dispatch) => {
     try {
@@ -53,7 +57,7 @@ export const addItemToCart = (token, item, cartId) => {
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
-    console.log(itemId, cartId);
+
     try {
       const response = await axios.delete('/api/orders/cart', {
         headers: { authorization: token },
@@ -130,6 +134,7 @@ export default function cartReducer(cart = {}, action) {
 
     case CHECKOUT_CART:
       return { ...cart, completed: true };
+
     default:
       return cart;
   }

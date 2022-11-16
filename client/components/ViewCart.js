@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { removeItemFromCart, cartCheckout } from '../store/cart';
 import history from '../history';
 
+
 export class ViewCart extends Component {
   constructor() {
     super();
@@ -56,6 +57,7 @@ export class ViewCart extends Component {
         )}
 
         <button onClick={this.handleCheckout}>Checkout</button>
+
       </div>
     );
   }
@@ -73,6 +75,7 @@ const mapDispatchToProps = (dispatch) => {
     removeItem: (token, itemId, cartId) => {
       dispatch(removeItemFromCart(token, itemId, cartId));
     },
+
     checkoutCart: (token, id) => dispatch(cartCheckout(token, id)),
   };
 };

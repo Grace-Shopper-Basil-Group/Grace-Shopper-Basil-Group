@@ -1,27 +1,25 @@
-
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { fetchProducts } from "../store/allProducts";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchProducts } from '../store/allProducts';
 import { addItemToCart } from '../store/cart.js';
-import SingleProduct from "./SingleProduct";
-import { Link } from "react-router-dom"
-import history from "../history"
-
+import SingleProduct from './SingleProduct';
+import { Link } from 'react-router-dom';
+import history from '../history';
 
 export class AllProducts extends Component {
   constructor() {
-    super()
-    this.handleClick = this.handleClick.bind(this)
+    super();
+    this.handleClick = this.handleClick.bind(this);
   }
   componentDidMount() {
     this.props.getProducts();
   }
 
-  handleClick(event, product){
-    const token = window.localStorage.getItem("token");
+  handleClick(event, product) {
+    const token = window.localStorage.getItem('token');
     if (token) {
-      const cartId = this.props.cart.id
-      this.props.addToCart(token, product, cartId)
+      const cartId = this.props.cart.id;
+      this.props.addToCart(token, product, cartId);
     } else {
       let cart = JSON.parse(window.localStorage.getItem('cart'));
       let inCart = false;
@@ -30,13 +28,13 @@ export class AllProducts extends Component {
           productInStorage.quantity++;
           inCart = true;
         }
-      })
+      });
       if (!inCart) {
         product.quantity = 1;
-        cart.products.push(product)
+        cart.products.push(product);
       }
-      window.localStorage.setItem('cart', JSON.stringify(cart))
-      history.push('/cart')
+      window.localStorage.setItem('cart', JSON.stringify(cart));
+      history.push('/cart');
     }
   }
 
@@ -57,12 +55,19 @@ export class AllProducts extends Component {
               </p>
               <p>
                 <button className="card_btns">
-                  <Link to={`/products/${product.id}`}>See Product Details</Link>
+                  <Link to={`/products/${product.id}`}>
+                    <span>See Product Details</span>
+                  </Link>
                 </button>
               </p>
               <p>
-                <button id={product.id} className="card_btns" onClick={(event) => this.handleClick(event, product)} type="click">
-                  Add to Cart
+                <button
+                  id={product.id}
+                  className="card_btns"
+                  onClick={(event) => this.handleClick(event, product)}
+                  type="click"
+                >
+                  <span>Add to Cart</span>
                 </button>
               </p>
             </div>
@@ -85,8 +90,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getProducts: () => dispatch(fetchProducts()),
     addToCart: (token, item, cartId) => {
-      dispatch(addItemToCart(token, item, cartId))
-    }
+      dispatch(addItemToCart(token, item, cartId));
+    },
   };
 };
 

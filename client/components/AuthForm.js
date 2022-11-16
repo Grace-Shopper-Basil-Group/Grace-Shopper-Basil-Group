@@ -112,7 +112,6 @@ const mapDispatch = (dispatch) => {
         );
       } else {
         dispatch(authenticate(username, password, formName));
-        history.push('/')
       }
     },
   };

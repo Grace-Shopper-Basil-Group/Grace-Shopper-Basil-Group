@@ -10,6 +10,11 @@ import Home from './components/Home';
 import { me } from './store';
 import AdminConsole from './components/AdminConsole';
 import Guestcart from './components/Guestcart';
+import Guestcheckout from './components/Guestcheckout';
+import Guestconfirmationpage from './components/Guestconfirmationpage';
+import AllUsers from './components/AllUsers';
+import UserProfile from './components/UserProfile';
+
 
 /**
  * COMPONENT
@@ -38,11 +43,15 @@ class Routes extends Component {
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
             <Route path="/cart" component={Guestcart} />
+            <Route path="/checkout" component={Guestcheckout} />
+            <Route path="/confirmation" component={Guestconfirmationpage}/>
           </Switch>
         )}
         {this.props.auth === 'admin' ? (
           <Switch>
+            <Route exact path="/users/:id" component={UserProfile} />
             <Route exact path="/admin" component={AdminConsole} />
+            <Route exact path="/users" component={AllUsers} />
           </Switch>
         ) : null}
       </div>
