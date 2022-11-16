@@ -11,6 +11,8 @@ import AdminConsole from './components/AdminConsole';
 import Guestcart from './components/Guestcart';
 import Guestcheckout from './components/Guestcheckout';
 import Guestconfirmationpage from './components/Guestconfirmationpage';
+import AllUsers from './components/AllUsers';
+
 
 /**
  * COMPONENT
@@ -45,10 +47,9 @@ class Routes extends Component {
         {this.props.auth === 'admin' ? (
           <Switch>
             <Route exact path="/admin" component={AdminConsole} />
+            <Route exact path="/users" component={AllUsers} />
           </Switch>
-        ) : (
-          null
-        )}
+        ) : null}
       </div>
     );
   }
