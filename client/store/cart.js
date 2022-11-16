@@ -1,9 +1,11 @@
 import axios from 'axios';
 import history from '../history';
 
+
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
 const REMOVE_ITEM = 'REMOVE_ITEM';
+const CHECKOUT_CART = 'CHECKOUT_CART';
 
 export const getCart = (cart) => {
   return {
@@ -26,6 +28,15 @@ export const removeItem = (itemId) => {
   };
 };
 
+export const checkoutCart = (cart) => {
+  return {
+    type: CHECKOUT_CART,
+    cart,
+  };
+};
+
+
+
 export const addItemToCart = (token, item, cartId) => {
   return async (dispatch) => {
     try {
@@ -46,11 +57,13 @@ export const addItemToCart = (token, item, cartId) => {
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
+
     try {
       const response = await axios.delete('/api/orders/cart', {
         headers: { authorization: token },
         data: { itemId: itemId, cartId: cartId },
       });
+
       dispatch(removeItem(itemId));
     } catch (e) {
       console.error(e);
@@ -65,6 +78,21 @@ export const fetchCart = (reqBody) => {
 
       const cart = response.data;
       dispatch(getCart(cart));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
+
+export const cartCheckout = (token, cartId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put('/api/orders/cart', {
+        headers: { authorization: token },
+        cartId: cartId,
+      });
+      const checkedoutCart = response.data;
+      dispatch(checkoutCart(checkedoutCart));
     } catch (e) {
       console.error(e);
     }
@@ -103,6 +131,10 @@ export default function cartReducer(cart = {}, action) {
         productsArray
       );
       return { ...cart, products: productsArray };
+
+    case CHECKOUT_CART:
+      return { ...cart, completed: true };
+
     default:
       return cart;
   }

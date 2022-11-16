@@ -1,7 +1,9 @@
-const router = require('express').Router()
+const router = require('express').Router();
 // const { default: auth } = require('../../client/store/auth');
-const { models: { Order, User, OrderItem, Product }} = require('../db');
-module.exports = router
+const {
+  models: { Order, User, OrderItem, Product },
+} = require('../db');
+module.exports = router;
 
 const requireToken = async (req, res, next) => {
   try {
@@ -9,7 +11,7 @@ const requireToken = async (req, res, next) => {
     const user = await User.findByToken(token);
     req.user = user;
     next();
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 };
@@ -20,7 +22,7 @@ const requireTokenForPosts = async (req, res, next) => {
     const user = await User.findByToken(token);
     req.user = user;
     next();
-  } catch(error) {
+  } catch (error) {
     next(error);
   }
 };
@@ -32,15 +34,18 @@ router.get('/cart', requireToken, async (req, res, next) => {
         complete: false,
         userId: req.user.id,
       },
-      include: [{
-        model: OrderItem,
-        model: Product }]
-    })
-    res.send(cart)
-  } catch(error) {
-    next(error)
+      include: [
+        {
+          model: OrderItem,
+          model: Product,
+        },
+      ],
+    });
+    res.send(cart);
+  } catch (error) {
+    next(error);
   }
-})
+});
 
 router.post('/cart', requireTokenForPosts, async (req, res, next) => {
   try {
@@ -49,19 +54,19 @@ router.post('/cart', requireTokenForPosts, async (req, res, next) => {
         orderId: req.body.cartId,
         productId: req.body.item.id,
       },
-    })
+    });
     orderItem.price = req.body.item.price;
     if (!created) {
       orderItem.quantity += 1;
     } else {
       orderItem.quantity = 1;
     }
-    await orderItem.save()
-    res.send(orderItem)
-  } catch(error) {
-    next(error)
+    await orderItem.save();
+    res.send(orderItem);
+  } catch (error) {
+    next(error);
   }
-})
+});
 
 router.delete('/cart', requireToken, async (req, res, next) => {
   try {
@@ -69,11 +74,20 @@ router.delete('/cart', requireToken, async (req, res, next) => {
       where: {
         orderId: req.body.cartId,
         productId: req.body.itemId,
-      }
-    })
-    await deletedItem.destroy()
-    res.sendStatus(200)
-  } catch(error) {
-    next(error)
+      },
+    });
+    await deletedItem.destroy();
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
   }
-})
+});
+
+router.put('/cart', requireTokenForPosts, async (req, res, next) => {
+  try {
+    const cart = await Order.findByPk(req.body.cartId);
+    res.send(await cart.update({ complete: true }));
+  } catch (error) {
+    next(error);
+  }
+});

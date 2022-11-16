@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { removeItemFromCart } from '../store/cart';
+import { removeItemFromCart, cartCheckout } from '../store/cart';
+import history from '../history';
+
 
 export class ViewCart extends Component {
   constructor() {
     super();
     this.handleRemove = this.handleRemove.bind(this);
+    this.handleCheckout = this.handleCheckout.bind(this);
   }
 
   handleRemove(itemId) {
@@ -16,6 +19,16 @@ export class ViewCart extends Component {
       this.props.removeItem(token, itemId, cartId);
     }
   }
+
+  handleCheckout() {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const cartId = this.props.cart.id;
+      this.props.checkoutCart(token, cartId);
+    }
+    history.push('/checkout');
+  }
+
   render() {
     return (
       <div>
@@ -42,6 +55,9 @@ export class ViewCart extends Component {
         ) : (
           <div>No items in cart</div>
         )}
+
+        <button onClick={this.handleCheckout}>Checkout</button>
+
       </div>
     );
   }
@@ -59,6 +75,8 @@ const mapDispatchToProps = (dispatch) => {
     removeItem: (token, itemId, cartId) => {
       dispatch(removeItemFromCart(token, itemId, cartId));
     },
+
+    checkoutCart: (token, id) => dispatch(cartCheckout(token, id)),
   };
 };
 
