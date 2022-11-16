@@ -15,7 +15,7 @@ export class CartDropdown extends Component {
       console.log('dropdownprops', this.props);
       const itemId = this.props.itemId;
       const cartId = this.props.cartId;
-      this.props.editItemQuant(token, itemId, cartId, newQuant); //editItemQuant is returning undefined
+      editItemQuant(token, itemId, cartId, newQuant); //editItemQuant is returning undefined
     }
   }
   render() {
