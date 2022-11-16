@@ -1,10 +1,11 @@
 import axios from 'axios';
 
+const GET_CART = 'GET_CART';
+const ADD_ITEM = 'ADD_ITEM';
+const REMOVE_ITEM = 'REMOVE_ITEM';
+const EDIT_QUANTITY = 'EDIT_QUANTITY';
 
-const GET_CART = "GET_CART";
-const ADD_ITEM = "ADD_ITEM";
-const REMOVE_ITEM = "REMOVE_ITEM"
-
+const AVAILABLE_QUANT = ['0', '1', '2', '3', '4', '5'];
 
 export const getCart = (cart) => {
   return {
@@ -17,45 +18,76 @@ export const addItem = (item) => {
   return {
     type: ADD_ITEM,
     item,
-  }
-}
+  };
+};
 
 export const removeItem = (itemId) => {
   return {
     type: REMOVE_ITEM,
     itemId,
-  }
-}
+  };
+};
+
+export const editQuant = (itemId, quantity) => {
+  return {
+    type: EDIT_QUANTITY,
+    itemId,
+    quantity,
+  };
+};
 
 export const addItemToCart = (token, item, cartId) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post("/api/orders/cart", { headers: {authorization: token}, item: item, cartId: cartId });
-      const addedItem = response.data
+      const response = await axios.post('/api/orders/cart', {
+        headers: { authorization: token },
+        item: item,
+        cartId: cartId,
+      });
+      const addedItem = response.data;
       item.orderItem = addedItem;
       dispatch(addItem(item));
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
-}
+  };
+};
+
+export const editItemQuant = (token, itemId, cartId, quant) => {
+  return async (dispatch) => {
+    console.log(itemId, cartId);
+    try {
+      const response = await axios.post('/api/orders/cart', {
+        headers: { authorization: token },
+        data: { itemId: itemId, cartId: cartId },
+      });
+      const editedItem = response.data;
+      item.orderItem = addedItem;
+      dispatch(editQuant(item));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
-    console.log(itemId, cartId)
+    console.log(itemId, cartId);
     try {
-      const response = await axios.delete("/api/orders/cart", { headers: {authorization: token}, data: { itemId: itemId, cartId: cartId}});
+      const response = await axios.delete('/api/orders/cart', {
+        headers: { authorization: token },
+        data: { itemId: itemId, cartId: cartId },
+      });
       dispatch(removeItem(itemId));
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
     }
-  }
-}
+  };
+};
 
 export const fetchCart = (reqBody) => {
   return async (dispatch) => {
     try {
-
       const response = await axios.get('/api/orders/cart', reqBody);
 
       const cart = response.data;
@@ -77,24 +109,36 @@ export default function cartReducer(cart = {}, action) {
           replace = true;
           return action.item;
         } else {
-          return product
+          return product;
         }
-      })
+      });
       if (!replace) {
-        newAddProducts.push(action.item)
+        newAddProducts.push(action.item);
       }
       let newCart = cart;
       newCart.products = newAddProducts;
       return newCart;
+    case EDIT_QUANTITY:
+      let cart = cart.map((orderItem) => {
+        if (orderItem.id === action.itemId) {
+          return { ...orderItem, quantity: action.quantity };
+        } else {
+          return orderItem;
+        }
+      });
+      return { ...cart, orderItem };
     case REMOVE_ITEM:
       let productsArray = [];
-      let newRemoveProducts = cart.products.reduce((runningList, currentProduct) => {
-        if (currentProduct.id !== action.itemId) {
-          productsArray.push(currentProduct)
-          return productsArray
-        }
-      }, productsArray);
-      return {...cart, products: productsArray}
+      let newRemoveProducts = cart.products.reduce(
+        (runningList, currentProduct) => {
+          if (currentProduct.id !== action.itemId) {
+            productsArray.push(currentProduct);
+            return productsArray;
+          }
+        },
+        productsArray
+      );
+      return { ...cart, products: productsArray };
     default:
       return cart;
   }
