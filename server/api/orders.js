@@ -99,7 +99,7 @@ router.delete('/cart', requireToken, async (req, res, next) => {
   }
 });
 
-router.put('/cart', requireTokenForPosts, async (req, res, next) => {
+router.put('/cart/checkout', requireTokenForPosts, async (req, res, next) => {
   try {
     const cart = await Order.findByPk(req.body.cartId);
     await Order.create({

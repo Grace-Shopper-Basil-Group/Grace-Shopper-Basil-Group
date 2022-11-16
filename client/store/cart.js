@@ -22,12 +22,11 @@ export const addItem = (item) => {
 };
 
 export const removeItem = (itemId) => {
-return {
-type: REMOVE_ITEM,
-itemId,
+  return {
+    type: REMOVE_ITEM,
+    itemId,
+  };
 };
-};
-
 
 export const editQuant = (item) => {
   return {
@@ -78,7 +77,6 @@ export const editItemQuant = (token, itemId, cartId, quant) => {
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
-
     try {
       const response = await axios.delete('/api/orders/cart', {
         headers: { authorization: token },
@@ -107,7 +105,7 @@ export const fetchCart = (reqBody) => {
 export const cartCheckout = (token, cartId) => {
   return async (dispatch) => {
     try {
-      const response = await axios.put('/api/orders/cart', {
+      const response = await axios.put('/api/orders/cart/checkout', {
         headers: { authorization: token },
         cartId: cartId,
       });
