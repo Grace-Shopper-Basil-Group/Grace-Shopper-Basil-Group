@@ -23,15 +23,15 @@ async function seed() {
   }
   const dbAccessUser = await User.create(accessUser)
 
-  const accessOrder = {
-    complete: false,
-    date: faker.date.past(),
-    shippingInfo: faker.address.buildingNumber(),
-    billingInfo: "placeholder",
-  }
+  // const accessOrder = {
+  //   complete: false,
+  //   date: faker.date.past(),
+  //   shippingInfo: faker.address.buildingNumber(),
+  //   billingInfo: "placeholder",
+  // }
 
-  const dbAccessOrder = await Order.create(accessOrder)
-  await dbAccessOrder.setUser(dbAccessUser)
+  // const dbAccessOrder = await Order.create(accessOrder)
+  // await dbAccessOrder.setUser(dbAccessUser)
 
   const userNumber = 10
 
@@ -60,20 +60,20 @@ async function seed() {
     };
   });
 
-  const orders = [...Array(userNumber)].map((order) => {
-    return {
-      complete: false,
-      date: faker.date.past(),
-      shippingInfo: faker.address.buildingNumber(),
-      billingInfo: "placeholder",
-    };
-  });
+  // const orders = [...Array(userNumber)].map((order) => {
+  //   return {
+  //     complete: false,
+  //     date: faker.date.past(),
+  //     shippingInfo: faker.address.buildingNumber(),
+  //     billingInfo: "placeholder",
+  //   };
+  // });
 
-  let dbOrders = await Promise.all(
-    orders.map((order) => {
-      return Order.create(order);
-    })
-  );
+  // let dbOrders = await Promise.all(
+  //   orders.map((order) => {
+  //     return Order.create(order);
+  //   })
+  // );
 
   const dbProducts = await Promise.all(
     products.map((product) => {
@@ -81,9 +81,9 @@ async function seed() {
     })
   );
 
-  for (let i = 0; i < dbOrders.length; i++) {
-    await dbOrders[i].setUser(dbUsers[i])
-  }
+  // for (let i = 0; i < dbOrders.length; i++) {
+  //   await dbOrders[i].setUser(dbUsers[i])
+  // }
 
   // const orderItems = [...Array(10)].map((order) => {
   //   return {
