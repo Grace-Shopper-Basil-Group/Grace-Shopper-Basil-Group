@@ -10,6 +10,7 @@ import { me } from './store';
 import AdminConsole from './components/AdminConsole';
 import Guestcart from './components/Guestcart';
 import AllUsers from './components/AllUsers';
+import UserProfile from './components/UserProfile';
 
 /**
  * COMPONENT
@@ -41,6 +42,7 @@ class Routes extends Component {
         )}
         {this.props.auth === 'admin' ? (
           <Switch>
+            <Route exact path="/users/:id" component={UserProfile} />
             <Route exact path="/admin" component={AdminConsole} />
             <Route exact path="/users" component={AllUsers} />
           </Switch>
