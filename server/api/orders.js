@@ -6,6 +6,7 @@ const {
 module.exports = router;
 
 const requireToken = async (req, res, next) => {
+  console.log('test');
   try {
     const token = req.headers.authorization;
     const user = await User.findByToken(token);
@@ -62,6 +63,25 @@ router.post('/cart', requireTokenForPosts, async (req, res, next) => {
       orderItem.quantity = 1;
     }
     await orderItem.save();
+    res.send(orderItem);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/cart', requireToken, async (req, res, next) => {
+  console.log('put req called');
+  try {
+    const orderItem = await OrderItem.findOne({
+      where: {
+        orderId: req.body.cartId,
+        productId: req.body.itemId,
+      },
+    });
+    console.log('order item', orderItem);
+    console.log('req body', req.body);
+    orderItem.quantity = req.body.quantity;
+    orderItem.save();
     res.send(orderItem);
   } catch (error) {
     next(error);

@@ -10,17 +10,16 @@ export class SingleProduct extends Component {
     this.state = {
       product: {},
     };
-    this.handleClick = this.handleClick.bind(this)
+    this.handleClick = this.handleClick.bind(this);
   }
-
 
   componentDidMount() {
     const productId = this.props.match.params.id;
     this.props.loadProduct(productId);
   }
 
-  handleClick(){
-    const token = window.localStorage.getItem("token");
+  handleClick() {
+    const token = window.localStorage.getItem('token');
     if (token) {
       const cartId = this.props.cart.id
       this.props.addToCart(token, this.props.product, cartId)
@@ -52,25 +51,25 @@ export class SingleProduct extends Component {
         <img src={this.props.product.imageUrl} />
         <button onClick={this.handleClick}>Add to Cart</button>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     product: state.product,
-    cart: state.cart
+    cart: state.cart,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     loadProduct: (id) => {
-      dispatch(fetchProduct(id))
+      dispatch(fetchProduct(id));
     },
     addToCart: (token, item, cartId) => {
-      dispatch(addItemToCart(token, item, cartId))
-    }
+      dispatch(addItemToCart(token, item, cartId));
+    },
   };
 };
 

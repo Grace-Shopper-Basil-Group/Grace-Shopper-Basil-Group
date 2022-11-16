@@ -1,10 +1,10 @@
 import axios from 'axios';
 import history from '../history';
 
-
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
 const REMOVE_ITEM = 'REMOVE_ITEM';
+const EDIT_QUANTITY = 'EDIT_QUANTITY';
 const CHECKOUT_CART = 'CHECKOUT_CART';
 
 export const getCart = (cart) => {
@@ -22,9 +22,17 @@ export const addItem = (item) => {
 };
 
 export const removeItem = (itemId) => {
+return {
+type: REMOVE_ITEM,
+itemId,
+};
+};
+
+
+export const editQuant = (item) => {
   return {
-    type: REMOVE_ITEM,
-    itemId,
+    type: EDIT_QUANTITY,
+    item,
   };
 };
 
@@ -34,8 +42,6 @@ export const checkoutCart = (cart) => {
     cart,
   };
 };
-
-
 
 export const addItemToCart = (token, item, cartId) => {
   return async (dispatch) => {
@@ -54,6 +60,25 @@ export const addItemToCart = (token, item, cartId) => {
     }
   };
 };
+export const editItemQuant = (token, itemId, cartId, quant) => {
+  return async (dispatch) => {
+    console.log('editItem dispatched!');
+    try {
+      const response = await axios('/api/orders/cart', {
+        headers: { authorization: token },
+        data: { itemId: itemId, cartId: cartId, quantity: +quant },
+        method: 'put',
+      });
+      const editedItem = response.data;
+      console.log('response', response);
+      dispatch(editQuant(editedItem));
+      history.push('/cart');
+      console.log('edited item', editedItem);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
@@ -63,7 +88,6 @@ export const removeItemFromCart = (token, itemId, cartId) => {
         headers: { authorization: token },
         data: { itemId: itemId, cartId: cartId },
       });
-
       dispatch(removeItem(itemId));
     } catch (e) {
       console.error(e);
@@ -119,6 +143,16 @@ export default function cartReducer(cart = {}, action) {
       let newCart = cart;
       newCart.products = newAddProducts;
       return newCart;
+    case EDIT_QUANTITY:
+      let newEditProducts = cart.products.map((product) => {
+        if (product.id == action.item.productId) {
+          product.orderItem = action.item;
+          return product;
+        } else {
+          return product;
+        }
+      });
+      return { ...cart, products: newEditProducts };
     case REMOVE_ITEM:
       let productsArray = [];
       let newRemoveProducts = cart.products.reduce(
@@ -131,10 +165,8 @@ export default function cartReducer(cart = {}, action) {
         productsArray
       );
       return { ...cart, products: productsArray };
-
     case CHECKOUT_CART:
       return { ...cart, completed: true };
-
     default:
       return cart;
   }
