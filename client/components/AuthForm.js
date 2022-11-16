@@ -46,7 +46,7 @@ const AuthForm = (props) => {
           <div>
             <button type="submit">{displayName}</button>
           </div>
-          {error && error.response && <div> {error.response.data} </div>}
+          {error && error.response && <div>Invalid signup information</div>}
         </form>
       ) : (
         <form onSubmit={handleSubmit} name={name}>
@@ -65,7 +65,7 @@ const AuthForm = (props) => {
           <div>
             <button type="submit">{displayName}</button>
           </div>
-          {error && error.response && <div> {error.response.data} </div>}
+          {error && error.response && <div>Invalid login information</div>}
         </form>
       )}
     </div>
