@@ -96,3 +96,6 @@ h2 h3 {
 .add_prod_button_container {
   display: inline-block;
 }
+.row
+{display:flex; flex-direction:row;
+}

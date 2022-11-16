@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { CartDropdown } from './CartDropdown';
+
+const AVAILABLE_QUANT = ['0', '1', '2', '3', '4', '5'];
 
 export class ViewCart extends Component {
   constructor(props) {
@@ -29,13 +32,17 @@ export class ViewCart extends Component {
                 <div>{item.description}</div>
                 <img src={item.imageUrl} />
                 <div>Quantity: {item.orderItem.quantity}</div>
-                <CartDropdown
-                  itemQuant={AVAILABLE_QUANT}
-                  selectedQuant={item.selectedQuant}
-                  onChange={this.handleQuantChange}
-                />
+                <div className="row">
+                  <p>Edit item quantity: </p>
+                  <CartDropdown
+                    itemQuant={AVAILABLE_QUANT}
+                    selectedQuant={item.selectedQuant}
+                    onChange={this.handleQuantChange}
+                  />
+                </div>
               </div>
             );
+            <b></b>;
           })
         ) : (
           <div>No items in cart</div>

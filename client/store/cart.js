@@ -5,8 +5,6 @@ const ADD_ITEM = 'ADD_ITEM';
 const REMOVE_ITEM = 'REMOVE_ITEM';
 const EDIT_QUANTITY = 'EDIT_QUANTITY';
 
-const AVAILABLE_QUANT = ['0', '1', '2', '3', '4', '5'];
-
 export const getCart = (cart) => {
   return {
     type: GET_CART,
@@ -119,7 +117,8 @@ export default function cartReducer(cart = {}, action) {
       newCart.products = newAddProducts;
       return newCart;
     case EDIT_QUANTITY:
-      let cart = cart.map((orderItem) => {
+      let productsArray = [];
+      let newEditProducts = cart.products.map((orderItem) => {
         if (orderItem.id === action.itemId) {
           return { ...orderItem, quantity: action.quantity };
         } else {
@@ -127,18 +126,18 @@ export default function cartReducer(cart = {}, action) {
         }
       });
       return { ...cart, orderItem };
-    case REMOVE_ITEM:
-      let productsArray = [];
-      let newRemoveProducts = cart.products.reduce(
-        (runningList, currentProduct) => {
-          if (currentProduct.id !== action.itemId) {
-            productsArray.push(currentProduct);
-            return productsArray;
-          }
-        },
-        productsArray
-      );
-      return { ...cart, products: productsArray };
+    // case REMOVE_ITEM:
+    //   let productsArray = [];
+    //   let newRemoveProducts = cart.products.reduce(
+    //     (runningList, currentProduct) => {
+    //       if (currentProduct.id !== action.itemId) {
+    //         productsArray.push(currentProduct);
+    //         return productsArray;
+    //       }
+    //     },
+    //     productsArray
+    //   );
+    //   return { ...cart, products: productsArray };
     default:
       return cart;
   }
