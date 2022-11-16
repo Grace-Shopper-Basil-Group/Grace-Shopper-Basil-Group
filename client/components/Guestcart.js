@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import history from '../history'
+import Guestcheckout from './Guestcheckout'
 
 
 export class Guestcart extends Component {
@@ -24,7 +25,7 @@ export class Guestcart extends Component {
     return (
       <div>
         <h1>Current Cart</h1>
-        {(products) ? (
+        {(products.length) ? (
         products.map((item, index) => {
           return(
             <div key={index}>
@@ -36,7 +37,8 @@ export class Guestcart extends Component {
               <button onClick={() =>{this.handleRemove(item.id)}}>Remove from cart</button>
             </div>
             )})
-        ):(<div>No items in cart</div>)}
+            ):(<div>No items in cart</div>)}
+          {(products.length) ? (<Link to="/checkout">Checkout</Link>) : (null)}
       </div>
     )
   }
