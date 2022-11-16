@@ -1,10 +1,9 @@
 import axios from 'axios';
-import history from '../history';
 
-const GET_CART = "GET_CART";
-const ADD_ITEM = "ADD_ITEM";
-const REMOVE_ITEM = "REMOVE_ITEM"
-
+const GET_CART = 'GET_CART';
+const ADD_ITEM = 'ADD_ITEM';
+const REMOVE_ITEM = 'REMOVE_ITEM';
+const CHECKOUT_CART = 'CHECKOUT_CART';
 
 export const getCart = (cart) => {
   return {
@@ -17,50 +16,79 @@ export const addItem = (item) => {
   return {
     type: ADD_ITEM,
     item,
-  }
-}
+  };
+};
 
 export const removeItem = (itemId) => {
   return {
     type: REMOVE_ITEM,
     itemId,
-  }
-}
+  };
+};
+
+export const checkoutCart = (cart) => {
+  return {
+    type: CHECKOUT_CART,
+    cart,
+  };
+};
 
 export const addItemToCart = (token, item, cartId) => {
   return async (dispatch) => {
     try {
-      const response = await axios.post("/api/orders/cart", { headers: {authorization: token}, item: item, cartId: cartId });
-      const addedItem = response.data
+      const response = await axios.post('/api/orders/cart', {
+        headers: { authorization: token },
+        item: item,
+        cartId: cartId,
+      });
+      const addedItem = response.data;
       item.orderItem = addedItem;
       dispatch(addItem(item));
       history.push('/cart');
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
-}
+  };
+};
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
-    console.log(itemId, cartId)
+    console.log(itemId, cartId);
     try {
-      const response = await axios.delete("/api/orders/cart", { headers: {authorization: token}, data: { itemId: itemId, cartId: cartId}});
+      const response = await axios.delete('/api/orders/cart', {
+        headers: { authorization: token },
+        data: { itemId: itemId, cartId: cartId },
+      });
+
       dispatch(removeItem(itemId));
-    } catch(e) {
-      console.error(e)
+    } catch (e) {
+      console.error(e);
     }
-  }
-}
+  };
+};
 
 export const fetchCart = (reqBody) => {
   return async (dispatch) => {
     try {
-
       const response = await axios.get('/api/orders/cart', reqBody);
 
       const cart = response.data;
       dispatch(getCart(cart));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
+
+export const cartCheckout = (token, cartId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put('/api/orders/cart', {
+        headers: { authorization: token },
+        cartId: cartId,
+      });
+      const checkedoutCart = response.data;
+      dispatch(checkoutCart(checkedoutCart));
     } catch (e) {
       console.error(e);
     }
@@ -78,24 +106,30 @@ export default function cartReducer(cart = {}, action) {
           replace = true;
           return action.item;
         } else {
-          return product
+          return product;
         }
-      })
+      });
       if (!replace) {
-        newAddProducts.push(action.item)
+        newAddProducts.push(action.item);
       }
       let newCart = cart;
       newCart.products = newAddProducts;
       return newCart;
     case REMOVE_ITEM:
       let productsArray = [];
-      let newRemoveProducts = cart.products.reduce((runningList, currentProduct) => {
-        if (currentProduct.id !== action.itemId) {
-          productsArray.push(currentProduct)
-          return productsArray
-        }
-      }, productsArray);
-      return {...cart, products: productsArray}
+      let newRemoveProducts = cart.products.reduce(
+        (runningList, currentProduct) => {
+          if (currentProduct.id !== action.itemId) {
+            productsArray.push(currentProduct);
+            return productsArray;
+          }
+        },
+        productsArray
+      );
+      return { ...cart, products: productsArray };
+
+    case CHECKOUT_CART:
+      return { ...cart, completed: true };
     default:
       return cart;
   }

@@ -5,6 +5,7 @@ import { Login, Signup } from './components/AuthForm';
 import AllProducts from './components/AllProducts';
 import SingleProduct from './components/SingleProduct';
 import ViewCart from './components/ViewCart';
+import Checkout from './components/Checkout';
 import Home from './components/Home';
 import { me } from './store';
 import AdminConsole from './components/AdminConsole';
@@ -30,6 +31,7 @@ class Routes extends Component {
         {isLoggedIn ? (
           <Switch>
             <Route path="/cart" component={ViewCart} />
+            <Route path="/checkout" component={Checkout} />
           </Switch>
         ) : (
           <Switch>
@@ -42,9 +44,7 @@ class Routes extends Component {
           <Switch>
             <Route exact path="/admin" component={AdminConsole} />
           </Switch>
-        ) : (
-          null
-        )}
+        ) : null}
       </div>
     );
   }
