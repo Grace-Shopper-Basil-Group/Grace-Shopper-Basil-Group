@@ -10,6 +10,17 @@ export class Checkout extends Component {
   render() {
     const orderId = this.props.cart.id;
     const products = this.props.cart.products;
+    const totalCost = this.props.cart.products.reduce(
+      (runningCost, currentItem) => {
+        runningCost += currentItem.price * currentItem.orderItem.quantity;
+        console.log(
+          'currentItem.orderItem.quantity :>> ',
+          currentItem.orderItem.quantity
+        );
+        return runningCost;
+      },
+      0
+    );
 
     return (
       <div>
@@ -21,11 +32,7 @@ export class Checkout extends Component {
             return <li key={index}>{product.name}</li>;
           })}
         </ul>
-        Total cost: $
-        {products.reduce((accum, product, idx) => {
-          accum += product.price;
-          return accum;
-        }, 0)}
+        <div>Total cost: ${totalCost}</div>
         <div>Shipping Address: 'placeholder'</div>
         <div>Expected Delivery: 2-3 Days</div>
         <Link to="/">Keep Shopping</Link>

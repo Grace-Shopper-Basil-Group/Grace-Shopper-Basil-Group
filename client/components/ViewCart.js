@@ -55,15 +55,20 @@ export class ViewCart extends Component {
                     itemQuant={AVAILABLE_QUANT}
                     editItemQuant={this.props.editItemQuant}
                   />
-                <button
-                  onClick={() => {
-                    this.handleRemove(item.id);
-                  }}>
-                  Remove from cart
-                </button>
+                  <button
+                    onClick={() => {
+                      this.handleRemove(item.id);
+                    }}
+                  >
+                    Remove from cart
+                  </button>
+                </div>
               </div>
-            </div>
-          )})) : (<div>No items in cart</div>)}
+            );
+          })
+        ) : (
+          <div>No items in cart</div>
+        )}
         <button onClick={this.handleCheckout}>Checkout</button>
       </div>
     );
