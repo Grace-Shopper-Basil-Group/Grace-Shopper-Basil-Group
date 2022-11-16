@@ -25,15 +25,16 @@ export class AddProduct extends Component {
 
   handleSubmit(evt) {
     evt.preventDefault();
+    const token = window.localStorage.getItem('token');
     let imageUrl = this.state.imageUrl;
     let id = this.props.id;
     if (imageUrl === '') {
       imageUrl = 'https://via.placeholder.com/200';
     }
     if (this.props.mode === 'edit') {
-      this.props.createProd(this.props.mode, { ...this.state, id, imageUrl });
+      this.props.createProd(this.props.mode, { ...this.state, id, imageUrl }, token);
     } else {
-      this.props.createProd(this.props.mode, { ...this.state, imageUrl });
+      this.props.createProd(this.props.mode, { ...this.state, imageUrl }, token);
     }
   }
 
@@ -71,11 +72,11 @@ export class AddProduct extends Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  createProd: (mode, product) => {
+  createProd: (mode, product, token) => {
     if (mode === 'edit') {
-      dispatch(updateProduct(product));
+      dispatch(updateProduct(product, token));
     } else {
-      dispatch(createProduct(product));
+      dispatch(createProduct(product, token));
     }
   },
 });

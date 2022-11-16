@@ -37,20 +37,20 @@ export const _deleteProduct = (product) => {
   };
 };
 //thunk creators
-export const createProduct = (product) => {
+export const createProduct = (product, token) => {
   return async (dispatch) => {
-    const data = await axios.post('/api/products', product);
+    const data = await axios.post('/api/products', { product, headers: { authorization: token }});
     dispatch(_createProduct(data.data));
     history.push('/admin');
   };
 };
 
-export const updateProduct = (product) => {
+export const updateProduct = (product, token) => {
   return async (dispatch) => {
     try {
       const { data: updated } = await axios.put(
         `/api/products/${product.id}`,
-        product
+        { product, headers: { authorization: token }}
       );
       dispatch(_updateProduct(updated));
       history.push('/admin');
@@ -60,9 +60,9 @@ export const updateProduct = (product) => {
   };
 };
 
-export const deleteProduct = (id) => {
+export const deleteProduct = (id, token) => {
   return async (dispatch) => {
-    const { data: product } = await axios.delete(`/api/products/${id}`);
+    const { data: product } = await axios.delete(`/api/products/${id}`, { headers: { authorization: token }});
     dispatch(_deleteProduct(product));
     history.push('/admin');
   };

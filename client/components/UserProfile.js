@@ -4,7 +4,8 @@ import { fetchSingleUser } from '../store/users';
 
 export class UserProfile extends React.Component {
   componentDidMount() {
-    this.props.getUser(this.props.match.params.id);
+    const token = window.localStorage.getItem('token');
+    this.props.getUser(this.props.match.params.id, token);
   }
 
   render() {
@@ -34,7 +35,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUser: (id) => dispatch(fetchSingleUser(id)),
+    getUser: (id, token) => dispatch(fetchSingleUser(id, token)),
   };
 };
 

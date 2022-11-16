@@ -4,7 +4,8 @@ import { fetchUsers } from '../store/users';
 
 export class AllUsers extends React.Component {
   componentDidMount() {
-    this.props.getUsers();
+    const token = window.localStorage.getItem('token');
+    this.props.getUsers(token);
   }
 
   render() {
@@ -39,7 +40,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUsers: () => dispatch(fetchUsers()),
+    getUsers: (token) => dispatch(fetchUsers(token)),
   };
 };
 
