@@ -4,7 +4,22 @@ const {
 } = require('../db');
 module.exports = router;
 
-router.get('/', async (req, res, next) => {
+const requireAdminToken = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization;
+    const user = await User.findByToken(token);
+    if (user.accessRights === "admin") {
+    req.user = user;
+    next();
+    } else {
+      throw new Error("You do not have access to view this information")
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+router.get('/', requireAdminToken, async (req, res, next) => {
   try {
     const users = await User.findAll({
       // explicitly select only the id and username fields - even though
@@ -19,7 +34,7 @@ router.get('/', async (req, res, next) => {
 });
 
 //GET /api/users/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', requireAdminToken, async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     res.send(user);

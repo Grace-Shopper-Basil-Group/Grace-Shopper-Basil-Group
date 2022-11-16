@@ -21,17 +21,17 @@ export const singleUser = (user) => {
 };
 
 //thunk creators
-export const fetchUsers = () => {
+export const fetchUsers = (token) => {
   return async (dispatch) => {
-    const response = await axios.get('/api/users');
+    const response = await axios.get('/api/users', { headers: { authorization: token } });
     const users = response.data;
     const action = setUsers(users);
     dispatch(action);
   };
 };
-export const fetchSingleUser = (id) => {
+export const fetchSingleUser = (id, token) => {
   return async (dispatch) => {
-    const response = await axios.get(`/api/users/${id}`);
+    const response = await axios.get(`/api/users/${id}`, { headers: { authorization: token }});
     const user = response.data;
     const action = singleUser(user);
     dispatch(action);

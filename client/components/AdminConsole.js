@@ -64,7 +64,7 @@ export class AdminConsole extends Component {
               {this.state.showEditForm == product.id ? (
                 <AddProduct id={product.id} mode="edit" />
               ) : null}
-              <button onClick={() => this.props.deleteProduct(product.id)}>
+              <button onClick={() => {const token = window.localStorage.getItem('token'); this.props.deleteProduct(product.id, token)}}>
                 Delete
               </button>
             </div>
@@ -84,7 +84,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    deleteProduct: (product) => dispatch(deleteProduct(product)),
+    deleteProduct: (product, token) => dispatch(deleteProduct(product, token)),
     getProducts: () => dispatch(fetchProducts()),
   };
 };
