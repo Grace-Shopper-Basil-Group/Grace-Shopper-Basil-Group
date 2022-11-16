@@ -33,7 +33,9 @@ async function seed() {
   const dbAccessOrder = await Order.create(accessOrder)
   await dbAccessOrder.setUser(dbAccessUser)
 
-  const users = [...Array(10)].map((user) => {
+  const userNumber = 10
+
+  const users = [...Array(userNumber)].map((user) => {
     return {
       username: faker.internet.userName(),
       firstName: faker.name.firstName(),
@@ -58,7 +60,7 @@ async function seed() {
     };
   });
 
-  const orders = [...Array(10)].map((order) => {
+  const orders = [...Array(userNumber)].map((order) => {
     return {
       complete: false,
       date: faker.date.past(),
@@ -79,26 +81,24 @@ async function seed() {
     })
   );
 
-  await Promise.all(
-    dbOrders.map((order) => {
-      return order.setUser(dbUsers[order.id - 1]);
-    })
-  );
+  for (let i = 0; i < dbOrders.length; i++) {
+    await dbOrders[i].setUser(dbUsers[i])
+  }
 
-  const orderItems = [...Array(10)].map((order) => {
-    return {
-      quantity: 2,
-      price: faker.commerce.price(),
-      orderId: Math.floor(Math.random() * 10) + 1,
-      productId: Math.floor(Math.random() * 10) + 1,
-    };
-  });
+  // const orderItems = [...Array(10)].map((order) => {
+  //   return {
+  //     quantity: 2,
+  //     price: faker.commerce.price(),
+  //     orderId: Math.floor(Math.random() * 10) + 1,
+  //     productId: Math.floor(Math.random() * 10) + 1,
+  //   };
+  // });
 
-  const dbOrderItems = await Promise.all(
-    orderItems.map((orderItem) => {
-      return OrderItem.create(orderItem);
-    })
-  );
+  // const dbOrderItems = await Promise.all(
+  //   orderItems.map((orderItem) => {
+  //     return OrderItem.create(orderItem);
+  //   })
+  // );
 
   const orderItem1 = {
     quantity: 2,
