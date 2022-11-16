@@ -62,7 +62,6 @@ export const addItemToCart = (token, item, cartId) => {
 };
 export const editItemQuant = (token, itemId, cartId, quant) => {
   return async (dispatch) => {
-    console.log('editItem dispatched!');
     try {
       const response = await axios('/api/orders/cart', {
         headers: { authorization: token },
@@ -70,10 +69,7 @@ export const editItemQuant = (token, itemId, cartId, quant) => {
         method: 'put',
       });
       const editedItem = response.data;
-      console.log('response', response);
       dispatch(editQuant(editedItem));
-      history.push('/cart');
-      console.log('edited item', editedItem);
     } catch (e) {
       console.error(e);
     }

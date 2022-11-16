@@ -3,15 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CartDropdown } from './CartDropdown';
 import { editItemQuant } from '../store/cart';
-
-const AVAILABLE_QUANT = ['1', '2', '3', '4', '5'];
-
-export class ViewCart extends Component {
-  constructor(props) {
-    super(props);
 import { removeItemFromCart, cartCheckout } from '../store/cart';
 import history from '../history';
 
+const AVAILABLE_QUANT = ['1', '2', '3', '4', '5'];
 
 export class ViewCart extends Component {
   constructor() {
@@ -60,23 +55,15 @@ export class ViewCart extends Component {
                     itemQuant={AVAILABLE_QUANT}
                     editItemQuant={this.props.editItemQuant}
                   />
-                </div>
-              </div>
-            );
-            <b></b>;
                 <button
                   onClick={() => {
                     this.handleRemove(item.id);
-                  }}
-                >
+                  }}>
                   Remove from cart
                 </button>
               </div>
-            );
-          })
-        ) : (
-          <div>No items in cart</div>
-        )}
+            </div>
+          )})) : (<div>No items in cart</div>)}
         <button onClick={this.handleCheckout}>Checkout</button>
       </div>
     );
