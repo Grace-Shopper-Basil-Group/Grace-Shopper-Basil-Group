@@ -2,25 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logout } from '../store';
-import { fetchCart } from "../store/cart";
+import { fetchCart } from '../store/cart';
 
 class Navbar extends React.Component {
-  constructor(props){
-    super(props)
-    console.log(this.props)
-
+  constructor(props) {
+    super(props);
   }
 
   componentDidMount() {
-    const token = window.localStorage.getItem("token");
+    const token = window.localStorage.getItem('token');
     if (token) {
       this.props.getCart(token);
+    } else {
+      if (!window.localStorage.getItem('cart')) {
+        let cart = JSON.stringify({
+          products: [],
+        });
+        window.localStorage.setItem('cart', cart);
+      }
     }
   }
 
   render() {
-    const { handleClick, isLoggedIn, auth } = this.props
-    return(
+    const { handleClick, isLoggedIn, auth } = this.props;
+    return (
       <div>
         <h1>WALLY WORLD</h1>
         <nav>
@@ -41,15 +46,16 @@ class Navbar extends React.Component {
               {/* The navbar will show these links before you log in */}
               <Link to="/login">Login</Link>
               <Link to="/signup">Sign Up</Link>
+              <Link to="/cart">Cart</Link>
               <Link to="/">Home</Link>
             </div>
           )}
         </nav>
         <hr />
       </div>
-    )
+    );
   }
-};
+}
 
 /**
  * CONTAINER

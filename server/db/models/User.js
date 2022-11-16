@@ -3,6 +3,7 @@ const db = require('../db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+const Order = require('./Order');
 
 const SALT_ROUNDS = 5;
 
@@ -90,6 +91,16 @@ const hashPassword = async (user) => {
     user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
   }
 };
+
+User.afterCreate(async (user) => {
+  const newOrder = await Order.create({
+    userId: user.id,
+    complete: false,
+    date: new Date(),
+    shippingInfo: "ShippingInfo",
+    billingInfo: "BillingInfo"
+  })
+})
 
 User.beforeCreate(hashPassword);
 User.beforeUpdate(hashPassword);

@@ -3,7 +3,9 @@ import history from '../history';
 
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
+const REMOVE_ITEM = 'REMOVE_ITEM';
 const EDIT_QUANTITY = 'EDIT_QUANTITY';
+const CHECKOUT_CART = 'CHECKOUT_CART';
 
 export const getCart = (cart) => {
   return {
@@ -19,17 +21,25 @@ export const addItem = (item) => {
   };
 };
 
-// export const removeItem = (itemId) => {
-//   return {
-//     type: REMOVE_ITEM,
-//     itemId,
-//   };
-// };
+export const removeItem = (itemId) => {
+return {
+type: REMOVE_ITEM,
+itemId,
+};
+};
+
 
 export const editQuant = (item) => {
   return {
     type: EDIT_QUANTITY,
     item,
+  };
+};
+
+export const checkoutCart = (cart) => {
+  return {
+    type: CHECKOUT_CART,
+    cart,
   };
 };
 
@@ -44,12 +54,12 @@ export const addItemToCart = (token, item, cartId) => {
       const addedItem = response.data;
       item.orderItem = addedItem;
       dispatch(addItem(item));
+      history.push('/cart');
     } catch (e) {
       console.error(e);
     }
   };
 };
-
 export const editItemQuant = (token, itemId, cartId, quant) => {
   return async (dispatch) => {
     console.log('editItem dispatched!');
@@ -72,6 +82,7 @@ export const editItemQuant = (token, itemId, cartId, quant) => {
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
+
     try {
       const response = await axios.delete('/api/orders/cart', {
         headers: { authorization: token },
@@ -91,6 +102,21 @@ export const fetchCart = (reqBody) => {
 
       const cart = response.data;
       dispatch(getCart(cart));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+};
+
+export const cartCheckout = (token, cartId) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.put('/api/orders/cart', {
+        headers: { authorization: token },
+        cartId: cartId,
+      });
+      const checkedoutCart = response.data;
+      dispatch(checkoutCart(checkedoutCart));
     } catch (e) {
       console.error(e);
     }
@@ -127,6 +153,20 @@ export default function cartReducer(cart = {}, action) {
         }
       });
       return { ...cart, products: newEditProducts };
+    case REMOVE_ITEM:
+      let productsArray = [];
+      let newRemoveProducts = cart.products.reduce(
+        (runningList, currentProduct) => {
+          if (currentProduct.id !== action.itemId) {
+            productsArray.push(currentProduct);
+            return productsArray;
+          }
+        },
+        productsArray
+      );
+      return { ...cart, products: productsArray };
+    case CHECKOUT_CART:
+      return { ...cart, completed: true };
     default:
       return cart;
   }

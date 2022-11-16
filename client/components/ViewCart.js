@@ -9,6 +9,32 @@ const AVAILABLE_QUANT = ['1', '2', '3', '4', '5'];
 export class ViewCart extends Component {
   constructor(props) {
     super(props);
+import { removeItemFromCart, cartCheckout } from '../store/cart';
+import history from '../history';
+
+
+export class ViewCart extends Component {
+  constructor() {
+    super();
+    this.handleRemove = this.handleRemove.bind(this);
+    this.handleCheckout = this.handleCheckout.bind(this);
+  }
+
+  handleRemove(itemId) {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const cartId = this.props.cart.id;
+      this.props.removeItem(token, itemId, cartId);
+    }
+  }
+
+  handleCheckout() {
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      const cartId = this.props.cart.id;
+      this.props.checkoutCart(token, cartId);
+    }
+    history.push('/checkout');
   }
 
   render() {
@@ -38,10 +64,20 @@ export class ViewCart extends Component {
               </div>
             );
             <b></b>;
+                <button
+                  onClick={() => {
+                    this.handleRemove(item.id);
+                  }}
+                >
+                  Remove from cart
+                </button>
+              </div>
+            );
           })
         ) : (
           <div>No items in cart</div>
         )}
+        <button onClick={this.handleCheckout}>Checkout</button>
       </div>
     );
   }
@@ -59,6 +95,11 @@ const mapDispatchToProps = (dispatch) => {
     editItemQuant: (token, itemId, cartId, quant) => {
       dispatch(editItemQuant(token, itemId, cartId, quant));
     },
+    removeItem: (token, itemId, cartId) => {
+      dispatch(removeItemFromCart(token, itemId, cartId));
+    },
+
+    checkoutCart: (token, id) => dispatch(cartCheckout(token, id)),
   };
 };
 
