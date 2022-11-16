@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { deleteProduct, fetchProducts } from '../store/allProducts';
 import AddProduct from './AddProduct';
+import AllUsers from './AllUsers';
 
 export class AdminConsole extends Component {
   constructor() {
@@ -20,7 +22,7 @@ export class AdminConsole extends Component {
   }
   handleEdit(evt) {
     evt.preventDefault();
-    this.setState({ showEditForm: evt.target.id})
+    this.setState({ showEditForm: evt.target.id });
   }
   handleAdd(evt) {
     evt.preventDefault();
@@ -41,6 +43,11 @@ export class AdminConsole extends Component {
               <span>Add Product</span>
             </button>
             {this.state.showAddForm && <AddProduct mode="create" />}
+            <a href="/users">
+              <button className="card_btns">
+                <span>View Users</span>
+              </button>
+            </a>
           </div>
         </div>
 
@@ -54,9 +61,9 @@ export class AdminConsole extends Component {
               <button id={product.id} onClick={this.handleEdit}>
                 Edit
               </button>
-              {(this.state.showEditForm == product.id) ? (
+              {this.state.showEditForm == product.id ? (
                 <AddProduct id={product.id} mode="edit" />
-              ):(null)}
+              ) : null}
               <button onClick={() => this.props.deleteProduct(product.id)}>
                 Delete
               </button>
