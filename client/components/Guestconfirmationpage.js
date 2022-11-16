@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 export class Guestconfirmationpage extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ export class Guestconfirmationpage extends Component {
         <div>Total cost: ${totalCost}.00</div>
         <div>Shipping address: {this.props.location.state.mailingAddress}</div>
         <div>Expected delivery: 3-5 days</div>
+        <Link to={'/'}>Continue shopping</Link>
       </div>
     )
   }
