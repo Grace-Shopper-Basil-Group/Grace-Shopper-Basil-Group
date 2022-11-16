@@ -7,7 +7,23 @@ import Guestcheckout from './Guestcheckout'
 export class Guestcart extends Component {
   constructor() {
     super();
+    this.handleChange = this.handleChange.bind(this);
     this.handleRemove = this.handleRemove.bind(this);
+  }
+
+  handleChange(event, item) {
+    let cart = JSON.parse(window.localStorage.getItem('cart'));
+    let newProducts = cart.products.map((product) => {
+      if (product.id === item.id) {
+        product.quantity = event.target.value
+        return product
+      } else {
+        return product
+      }
+    })
+    cart.products = newProducts
+    window.localStorage.setItem('cart', JSON.stringify(cart));
+    history.push('/cart')
   }
 
   handleRemove(itemId) {
@@ -21,6 +37,7 @@ export class Guestcart extends Component {
   render() {
     let cart = JSON.parse(window.localStorage.getItem('cart'));
     let products = cart.products;
+    console.log(products)
     return (
       <div>
         <h1>Current Cart</h1>
@@ -33,6 +50,13 @@ export class Guestcart extends Component {
               <div>{item.description}</div>
               <img src={item.imageUrl}/>
               <div>Quantity: {item.quantity}</div>
+              <select onChange={(event) => {this.handleChange(event, item)}} value={item.quantity}>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+              </select>
               <button onClick={() =>{this.handleRemove(item.id)}}>Remove from cart</button>
             </div>
             )})
