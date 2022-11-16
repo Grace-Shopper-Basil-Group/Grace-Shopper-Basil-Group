@@ -86,6 +86,13 @@ router.delete('/cart', requireToken, async (req, res, next) => {
 router.put('/cart', requireTokenForPosts, async (req, res, next) => {
   try {
     const cart = await Order.findByPk(req.body.cartId);
+    await Order.create({
+      complete: false,
+      userId: req.user.id,
+      shippingInfo: 'placeholder',
+      billingInfo: 'placeholder',
+      date: new Date(),
+    });
     res.send(await cart.update({ complete: true }));
   } catch (error) {
     next(error);
