@@ -10,17 +10,17 @@ export class CartDropdown extends Component {
   }
   handleQuantChange(evt) {
     const newQuant = evt.target.value;
-    const token = window.localStorage.getItem('token');
+    const editQuant = this.props.editItemQuant;
+    const token = window.localStorage.getItem('token'); //might have to make changes to token
     if (token) {
-      console.log('dropdownprops', this.props);
       const itemId = this.props.itemId;
       const cartId = this.props.cartId;
-      editItemQuant(token, itemId, cartId, newQuant); //editItemQuant is returning undefined
+      editQuant(token, itemId, cartId, newQuant);
     }
   }
   render() {
     return (
-      <select onChange={this.handleQuantChange}>
+      <select onChange={this.handleQuantChange} value={this.props.currQuant}>
         {this.props.itemQuant.map((quant) => (
           <option key={quant} value={quant}>
             {quant}
@@ -33,7 +33,7 @@ export class CartDropdown extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    editItemQuant: (token, itemId, cartId, quant) => {
+    editQuant: (token, itemId, cartId, quant) => {
       dispatch(editItemQuant(token, itemId, cartId, quant));
     },
   };

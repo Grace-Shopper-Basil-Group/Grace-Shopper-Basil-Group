@@ -1,8 +1,8 @@
 import axios from 'axios';
+import history from '../history';
 
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
-// const REMOVE_ITEM = 'REMOVE_ITEM';
 const EDIT_QUANTITY = 'EDIT_QUANTITY';
 
 export const getCart = (cart) => {
@@ -26,11 +26,10 @@ export const addItem = (item) => {
 //   };
 // };
 
-export const editQuant = (itemId, quantity) => {
+export const editQuant = (item) => {
   return {
     type: EDIT_QUANTITY,
-    itemId,
-    quantity,
+    item,
   };
 };
 
@@ -53,15 +52,18 @@ export const addItemToCart = (token, item, cartId) => {
 
 export const editItemQuant = (token, itemId, cartId, quant) => {
   return async (dispatch) => {
-    console.log(itemId, cartId);
+    console.log('editItem dispatched!');
     try {
-      const response = await axios.post('/api/orders/cart', {
+      const response = await axios('/api/orders/cart', {
         headers: { authorization: token },
-        data: { itemId: itemId, cartId: cartId },
+        data: { itemId: itemId, cartId: cartId, quantity: +quant },
+        method: 'put',
       });
       const editedItem = response.data;
-      item.orderItem = editedItem;
-      dispatch(editQuant(item.id, quant));
+      console.log('response', response);
+      dispatch(editQuant(editedItem));
+      history.push('/cart');
+      console.log('edited item', editedItem);
     } catch (e) {
       console.error(e);
     }
@@ -70,7 +72,6 @@ export const editItemQuant = (token, itemId, cartId, quant) => {
 
 export const removeItemFromCart = (token, itemId, cartId) => {
   return async (dispatch) => {
-    console.log(itemId, cartId);
     try {
       const response = await axios.delete('/api/orders/cart', {
         headers: { authorization: token },
@@ -117,27 +118,15 @@ export default function cartReducer(cart = {}, action) {
       newCart.products = newAddProducts;
       return newCart;
     case EDIT_QUANTITY:
-      let productsArray = [];
-      let newEditProducts = cart.products.map((orderItem) => {
-        if (orderItem.id === action.itemId) {
-          return { ...orderItem, quantity: action.quantity };
+      let newEditProducts = cart.products.map((product) => {
+        if (product.id == action.item.productId) {
+          product.orderItem = action.item;
+          return product;
         } else {
-          return orderItem;
+          return product;
         }
       });
-      return { ...cart, orderItem };
-    // case REMOVE_ITEM:
-    //   let productsArray = [];
-    //   let newRemoveProducts = cart.products.reduce(
-    //     (runningList, currentProduct) => {
-    //       if (currentProduct.id !== action.itemId) {
-    //         productsArray.push(currentProduct);
-    //         return productsArray;
-    //       }
-    //     },
-    //     productsArray
-    //   );
-    //   return { ...cart, products: productsArray };
+      return { ...cart, products: newEditProducts };
     default:
       return cart;
   }

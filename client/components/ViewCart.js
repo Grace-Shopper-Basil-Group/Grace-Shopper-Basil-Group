@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { CartDropdown } from './CartDropdown';
 import { editItemQuant } from '../store/cart';
 
-const AVAILABLE_QUANT = ['0', '1', '2', '3', '4', '5'];
+const AVAILABLE_QUANT = ['1', '2', '3', '4', '5'];
 
 export class ViewCart extends Component {
   constructor(props) {
@@ -12,7 +12,6 @@ export class ViewCart extends Component {
   }
 
   render() {
-    console.log('props', this.props);
     return (
       <div>
         <h1>Current Cart</h1>
@@ -31,7 +30,9 @@ export class ViewCart extends Component {
                     key={item.id}
                     itemId={item.id}
                     cartId={this.props.cart.id}
+                    currQuant={item.orderItem.quantity}
                     itemQuant={AVAILABLE_QUANT}
+                    editItemQuant={this.props.editItemQuant}
                   />
                 </div>
               </div>
