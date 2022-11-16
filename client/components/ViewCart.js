@@ -2,24 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { CartDropdown } from './CartDropdown';
+import { editItemQuant } from '../store/cart';
 
 const AVAILABLE_QUANT = ['0', '1', '2', '3', '4', '5'];
 
 export class ViewCart extends Component {
   constructor(props) {
     super(props);
-    this.handleQuantChange = this.handleQuantChange.bind(this);
-  }
-
-  handleQuantChange(itemId) {
-    const token = window.localStorage.getItem('token');
-    if (token) {
-      const cartId = this.props.cart.id;
-      this.props.removeItem(token, itemId, cartId);
-    }
   }
 
   render() {
+    console.log('props', this.props);
     return (
       <div>
         <h1>Current Cart</h1>
@@ -35,9 +28,10 @@ export class ViewCart extends Component {
                 <div className="row">
                   <p>Edit item quantity: </p>
                   <CartDropdown
+                    key={item.id}
+                    itemId={item.id}
+                    cartId={this.props.cart.id}
                     itemQuant={AVAILABLE_QUANT}
-                    selectedQuant={item.selectedQuant}
-                    onChange={this.handleQuantChange}
                   />
                 </div>
               </div>
@@ -61,8 +55,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    removeItem: (token, itemId, cartId) => {
-      dispatch(removeItemFromCart(token, itemId, cartId));
+    editItemQuant: (token, itemId, cartId, quant) => {
+      dispatch(editItemQuant(token, itemId, cartId, quant));
     },
   };
 };

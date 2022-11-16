@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const GET_CART = 'GET_CART';
 const ADD_ITEM = 'ADD_ITEM';
-const REMOVE_ITEM = 'REMOVE_ITEM';
+// const REMOVE_ITEM = 'REMOVE_ITEM';
 const EDIT_QUANTITY = 'EDIT_QUANTITY';
 
 export const getCart = (cart) => {
@@ -19,12 +19,12 @@ export const addItem = (item) => {
   };
 };
 
-export const removeItem = (itemId) => {
-  return {
-    type: REMOVE_ITEM,
-    itemId,
-  };
-};
+// export const removeItem = (itemId) => {
+//   return {
+//     type: REMOVE_ITEM,
+//     itemId,
+//   };
+// };
 
 export const editQuant = (itemId, quantity) => {
   return {
@@ -60,8 +60,8 @@ export const editItemQuant = (token, itemId, cartId, quant) => {
         data: { itemId: itemId, cartId: cartId },
       });
       const editedItem = response.data;
-      item.orderItem = addedItem;
-      dispatch(editQuant(item));
+      item.orderItem = editedItem;
+      dispatch(editQuant(item.id, quant));
     } catch (e) {
       console.error(e);
     }
